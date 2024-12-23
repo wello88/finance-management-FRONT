@@ -1,0 +1,52 @@
+<div class="file-upload-container">
+  <div class="upload-zone" 
+       (dragover)="$event.preventDefault()" 
+       (drop)="$event.preventDefault(); onFileSelected($event)">
+    
+    <input type="file" 
+           #fileInput 
+           (change)="onFileSelected($event)" 
+           [accept]="allowedFileTypes.join(',')"
+           style="display: none">
+
+    <mat-icon>cloud_upload</mat-icon>
+    <h3>Drag and drop file here</h3>
+    <p>or</p>
+    <button mat-raised-button color="primary" (click)="fileInput.click()">
+      Choose File
+    </button>
+
+    <p *ngIf="selectedFile" class="file-name">
+      Selected: {{ fileName }}
+    </p>
+  </div>
+
+  <div *ngIf="uploadProgress > 0" class="progress-section">
+    <mat-progress-bar mode="determinate" [value]="uploadProgress">
+    </mat-progress-bar>
+    <span>{{ uploadProgress }}%</span>
+  </div>
+
+  <div class="actions" *ngIf="selectedFile">
+    <button mat-raised-button 
+            color="primary" 
+            (click)="uploadFile()" 
+            [disabled]="uploadProgress > 0">
+      Upload
+    </button>
+    <button mat-button 
+            color="warn" 
+            (click)="clearSelection()" 
+            [disabled]="uploadProgress > 0">
+      Cancel
+    </button>
+  </div>
+
+  <div *ngIf="uploadError" class="error-message">
+    {{ uploadError }}
+  </div>
+
+  <div *ngIf="uploadSuccess" class="success-message">
+    File uploaded successfully!
+  </div>
+</div>

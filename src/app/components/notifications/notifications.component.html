@@ -1,0 +1,19 @@
+<div class="notification-container">
+  <mat-card *ngFor="let notification of notifications" class="notification-card">
+    <mat-card-content>
+      <div class="notification-content">
+        <p class="message">{{ notification.message }}</p>
+        <p class="timestamp">{{ notification.timestamp | date:'medium' }}</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div class="action-container">
+  <button mat-raised-button 
+          color="primary" 
+          (click)="sendNotification('New test notification!')"
+          class="send-button">
+    Send Test Notification
+  </button>
+</div>

@@ -1,0 +1,51 @@
+<div class="bonus-request-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Submit Bonus Request</mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <form #bonusForm="ngForm" (ngSubmit)="submitForm()" class="bonus-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Title</mat-label>
+          <input matInput [(ngModel)]="bonusRequest.title" name="title" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Reason</mat-label>
+          <textarea matInput [(ngModel)]="bonusRequest.reason" name="reason" required rows="4"></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Amount</mat-label>
+          <input matInput type="number" [(ngModel)]="bonusRequest.amount" name="amount" required min="0">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Assign To</mat-label>
+          <mat-select [(ngModel)]="bonusRequest.assigned_to" name="assigned_to" required>
+            <mat-option *ngFor="let user of users" [value]="user.id">
+              {{ user.username }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="file-upload">
+          <input type="file" #fileInput (change)="onFileSelected($event)" 
+                 accept=".pdf,.doc,.docx,.jpg,.png" style="display: none">
+          <button type="button" mat-stroked-button (click)="fileInput.click()">
+            <mat-icon>attach_file</mat-icon>
+            {{ selectedFile?.name || 'Attach File' }}
+          </button>
+        </div>
+
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit" 
+                  [disabled]="!bonusForm.valid || isSubmitting">
+            {{ isSubmitting ? 'Submitting...' : 'Submit Request' }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
