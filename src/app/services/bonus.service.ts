@@ -11,9 +11,9 @@ export class BonusService {
 
   constructor(private http: HttpClient) {}
 
-  getBonusRequests(): Observable<any> {
-    return this.http.get(this.apiUrl);
-  }
+  // getBonusRequests(): Observable<any[]> {
+  //   return this.http.get<any[]>(this.apiUrl);
+  // }
 
   createBonusRequest(data: any): Observable<any> {
     return this.http.post(this.apiUrl, data);
@@ -26,11 +26,25 @@ export class BonusService {
   deleteBonusRequest(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}${id}/`);
   }
-  approveBonusRequest(id: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${id}/approve/`, { action: 'APPROVED' });
+  // approveBonusRequest(requestId: number): Observable<any> {
+  //   return this.http.post(`${this.apiUrl}/${requestId}/approve/`, {});
+  // }
+  getApprovedBonuses(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/approved-bonuses/`);
+  }
+  rejectBonusRequest(id: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${id}/approve/`, {
+      action: 'REJECTED'
+    });
   }
 
-  rejectBonusRequest(id: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${id}/approve/`, { action: 'REJECTED' });
+  approveBonusRequest(id: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${id}/approve/`, {
+      action: 'APPROVED'  
+    });
+  }
+
+  getBonusRequests(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl);
   }
 }

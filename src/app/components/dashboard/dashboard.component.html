@@ -1,64 +1,99 @@
-<mat-toolbar color="primary">
+<mat-toolbar color="primary" class="navbar">
+  <div class="navbar-brand">
     <span>Finance Management System</span>
-    <button mat-button (click)="logout()">Logout</button>
-  </mat-toolbar>
-  
-  <div class="dashboard-container">
-    <mat-card>
-      <h3>Bonus Requests</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Reason</th>
-            <th>Amount</th>
-            <th>Status</th>
-            <th>Attachment</th>
-            <th *ngIf="isFinanceRole">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let request of bonusRequests">
-            <td>{{ request.title }}</td>
-            <td>{{ request.reason }}</td>
-            <td>{{ request.amount | currency }}</td>
-            <td>
-              <span [ngClass]="'status-' + request.status.toLowerCase()">
-                {{ request.status }}
-              </span>
-            </td>
-            <td>
-              <a *ngIf="request.attachment" 
-                 [href]="request.attachment"
-                 target="_blank"
-                 class="attachment-link">
-                <mat-icon>attach_file</mat-icon>
-              </a>
-            </td>
-            <td *ngIf="isFinanceRole && request.status === 'PENDING'" class="action-buttons">
-              <button mat-icon-button 
-                      color="primary" 
-                      (click)="approveBonusRequest(request.id)"
-                      matTooltip="Approve Request">
-                <mat-icon>check_circle</mat-icon>
-              </button>
-              <button mat-icon-button 
-                      color="warn" 
-                      (click)="rejectBonusRequest(request.id)"
-                      matTooltip="Reject Request">
-                <mat-icon>cancel</mat-icon>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </mat-card>
-  
-    <mat-card>
-      <h3>Notifications</h3>
-      <ul>
-        <li *ngFor="let notification of notifications">{{ notification }}</li>
-      </ul>
-    </mat-card>
   </div>
-  
+  <div class="navbar-end">
+    <span class="username">{{ username }}</span> <!-- Display username -->
+    <button mat-button class="logout-btn" (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span>Logout</span>
+    </button>
+  </div>
+</mat-toolbar>
+
+<div class="dashboard-container">
+
+  <!-- Bonus Requests Table -->
+  <mat-card>
+    <h3>Bonus Requests</h3>
+    <button mat-raised-button color="primary" *ngIf="!isFinanceRole" (click)="createBonusRequest()">
+      <mat-icon>add</mat-icon>
+      Create Bonus Request
+    </button>
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Reason</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Attachment</th>
+          <th *ngIf="isFinanceRole">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let request of bonusRequests">
+          <td>{{ request.title }}</td>
+          <td>{{ request.reason }}</td>
+          <td>{{ request.amount | currency }}</td>
+          <td>
+            <span [ngClass]="'status-' + request.status.toLowerCase()">
+              {{ request.status }}
+            </span>
+          </td>
+          <td>
+            <a *ngIf="request.attachment" [href]="request.attachment" target="_blank" class="attachment-link">
+              <mat-icon>attach_file</mat-icon>
+            </a>
+          </td>
+          <td *ngIf="isFinanceRole && request.status === 'PENDING'" class="action-buttons">
+            <button mat-icon-button color="primary" (click)="approveBonusRequest(request.id)"
+              matTooltip="Approve Request">
+              <mat-icon>check_circle</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="rejectBonusRequest(request.id)" matTooltip="Reject Request">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-card>
+
+
+  <mat-card class="chart-card" *ngIf="isFinanceRole">
+    <mat-card-header>
+      <mat-card-title>Approved Bonus Amounts by Month</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="chart-container">
+        <canvas #bonusChart></canvas>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+
+
+
+ <!-- Notifications Card -->
+  <mat-card class="notifications-card">
+    <mat-card-header>
+      <mat-card-title>Notifications</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="notifications-list">
+        <div *ngFor="let notification of notifications" class="notification-item">
+          <mat-icon>notifications</mat-icon>
+          <span>{{ notification }}</span>
+        </div>
+        <div *ngIf="notifications.length === 0" class="no-notifications">
+          No notifications
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+
+
+
+</div>

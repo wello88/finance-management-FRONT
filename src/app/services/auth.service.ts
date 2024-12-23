@@ -6,6 +6,8 @@ interface DecodedToken {
   role: string;
   exp: number;
   user_id: number;
+  username: string;
+
 }
 
 @Injectable({
@@ -45,7 +47,18 @@ export class AuthService {
       return null;
     }
   }
+  getUsername(): string | null {
+    const token = localStorage.getItem('access_token');
+    if (!token) return null;
 
+    try {
+      const decodedToken: DecodedToken = jwtDecode(token);
+      return decodedToken.username;
+    } catch (error) {
+      console.error('Token decode error:', error);
+      return null;
+    }
+  }
   logout(): void {
     localStorage.removeItem('access_token');
     this.router.navigate(['/login']);

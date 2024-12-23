@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { BonusRequestService } from '../../services/bonus-request.service';
 import { FileUploadDialogComponent } from '../file-upload/file-upload.component';
+import { Router } from '@angular/router'; // Add this import
 
 export interface BonusRequest {
   title: string;
@@ -53,7 +54,9 @@ export class BonusRequestComponent implements OnInit {
   constructor(
     private bonusRequestService: BonusRequestService,
     public dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router  // Add Router to constructor
+
   ) {}
 
   ngOnInit() {
@@ -74,13 +77,15 @@ export class BonusRequestComponent implements OnInit {
     }
   }
 
-  submitForm() {
+  submitForm(): void {
     this.isSubmitting = true;
     this.bonusRequestService.createBonusRequest(this.bonusRequest, this.selectedFile ?? undefined)
       .subscribe({
         next: (response) => {
-          this.showSuccess('Bonus request submitted successfully');
-          this.resetForm();
+          this.snackBar.open('Bonus request submitted successfully', 'Close', {
+            duration: 3000
+          });
+          this.router.navigate(['/dashboard']);
         },
         error: (error) => {
           this.showError('Failed to submit bonus request');
@@ -90,6 +95,8 @@ export class BonusRequestComponent implements OnInit {
         }
       });
   }
+
+  
 
   resetForm() {
     this.bonusRequest = {
